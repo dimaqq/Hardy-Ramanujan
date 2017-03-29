@@ -1,6 +1,6 @@
 ## peformance test results
 ```
-test_cubes.py N used 9000000000
+N used 9000000000
 time used 9.743118
 memory used 1146880
 ```
