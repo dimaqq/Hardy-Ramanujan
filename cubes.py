@@ -26,8 +26,9 @@ class Int(int):
 
 def f(N):
     heap = []
-    for j in range(1, int(N ** (1/3)) + 1):  # imprecise bound
-        gen = iter(range(j))
+    # FIXME cubic root introduces inaccuracy beyond ~48988659276962496
+    for j in range(2, int(N ** (1/3)) + 1):  # imprecise bound
+        gen = iter(range(1, j))
         i = next(gen)
         n = Int(i ** 3 + j ** 3, gen, j)
         heapq.heappush(heap, n)
@@ -37,7 +38,7 @@ def f(N):
         yield n
         try:
             n = Int(next(n.gen) ** 3 + n.j ** 3, n.gen, n.j)
-            if n > N:
+            if n >= N:
                 raise StopIteration()  # precise bound
         except StopIteration:
             heapq.heappop(heap)
@@ -45,9 +46,24 @@ def f(N):
             heapq.heappushpop(heap, n)
 
 
-def solutions(N):
+def solutions_2_way(N):
+    """ Enumerate Ramanujan 2-way solutions (at least) less than N """
     last = None
     for n in f(N):
         if n == last:
             yield n
         last = n
+
+
+def solutions(N):
+    import collections
+    """ Count the number of ways for each a^3 + b^3 solution """
+    return collections.Counter(f(N))
+
+
+def solutions_n_way(N, n):
+    return {k for k, v in solutions(N).items() if v == n}
+
+
+def solutions_at_least_n_way(N, n):
+    return {k for k, v in solutions(N).items() if v >= n}
