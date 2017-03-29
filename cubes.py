@@ -19,13 +19,12 @@ class Int(int):
         rv.j = j
         return rv
 
-    def __repr__(self):
-        return "%s %s %s" % (self, self.j, id(self.gen))
+    # below was useful for debugging...
+    # def __repr__(self):
+    #     return "%s %s %s" % (self, self.j, id(self.gen))
 
 
 def f(N):
-    import logging
-    logging.warn("limit is %s", int(N ** (1/3)) + 1 + 1)
     heap = []
     for j in range(1, int(N ** (1/3)) + 1):  # imprecise bound
         gen = iter(range(j))
@@ -47,11 +46,8 @@ def f(N):
 
 
 def solutions(N):
-    import logging
     last = None
     for n in f(N):
-        logging.warn("got %r", n)
         if n == last:
-            logging.warn("Match %r %r", last, n)
             yield n
         last = n
